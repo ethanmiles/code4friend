@@ -15,7 +15,7 @@ class Analysis:
         mat_t = f[name]
         mat = np.transpose(mat_t)
         mat = mat.astype(np.int32)  # float2int
-        mat[:, 2] = mat[:, 2] / (24*30)   # hours2day
+        mat[:, 2] = mat[:, 2] / (24*30)   # hours2month
         self.mat = mat
 
     def 打印A的频数(self, a):
