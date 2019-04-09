@@ -4,8 +4,10 @@ import collections
 import matplotlib.pyplot as plt
 import pandas as pd
 import re
+import seaborn as sb
 path = 'newratinglist20.mat'
 np.set_printoptions(precision=0, suppress=True)
+sb.set()
 
 
 class Analysis:
@@ -18,33 +20,41 @@ class Analysis:
         mat[:, 2] = mat[:, 2] / (24*30)   # hours2month
         self.mat = mat
 
-    def 打印A的频数(self, a):
+    def paint_frequency_of_A_hist(self, a):
         col = self.mat[:, a]
         plt.hist(col, bins=1000, normed=0, facecolor="blue",
                  edgecolor="black", alpha=0.7)
         plt.show()
 
-    def 打印A列等于B时C列的频数(self, a, b, c):
+    def paint_colC_when_colA_is_B_hist(self, a, b, c):
         col = self.mat[self.mat[:, a] == b][:, c]
         plt.hist(col, bins=25, normed=0, facecolor="blue",
                  edgecolor="black", alpha=0.7)
         plt.show()
 
-    def A列分位数(self, a):
+    def print_colA_Quantile(self, a):
         col = self.mat[:, a]
-        a = round(np.mean(col), 2)
-        b = np.median(col)
         c = pd.DataFrame(col).describe()
         print(c)
 
-    def 打印A列等于B时C列的分位数(self, a, b, c):
+    def print_colC_when_colA_is_B_Quantile(self, a, b, c):
         col = self.mat[self.mat[:, a] == b][:, c]
-        a = round(np.mean(col), 2)
-        b = np.median(col)
         c = pd.DataFrame(col).describe()
         print(c)
+
+    def sbpaint_colC_when_colA_is_B_kde(self, a, b, c):
+        sb.set_style('darkgrid')
+        col = self.mat[self.mat[:, a] == b][:, c]
+        sb.distplot(col, kde_kws={"label": "KDE"}, color="y")
+        plt.show()
+
+    def sbpaint_frequency_of_A_kde(self, a):
+        sb.set_style('darkgrid')
+        col = self.mat[:, a]
+        sb.distplot(col, kde_kws={"label": "KDE"}, color="y")
+        plt.show()
 
 
 if __name__ == "__main__":
     als = Analysis('newratinglist20.mat')
-    als.打印A列等于B时C列的频数(1, 1, 2)
+    als.sbpaint_frequency_of_A_kde(1)
