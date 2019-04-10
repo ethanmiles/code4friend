@@ -27,45 +27,72 @@ class Analysis:
         mat[:, 2] = mat[:, 2] / (24*30)   # hours2month
         self.mat = mat
 
+    # self.mat
     def get_frequency_of_A(self, a):
         return self.mat[:, a]
 
+    # self.mat
     def get_frequency_of_colC_where_colA_is_B(self, a, b, c):
         return self.mat[self.mat[:, a] == b][:, c]
 
-    def paint_frequency_of_A_hist(self, a):
-        col = self.get_frequency_of_A(a)
-        plt.hist(col, bins=1000, normed=0, facecolor="blue",
+     # self.mat
+    def get_max_of_colA(self, a):
+        max = self.mat[0, a]
+        for row in self.mat:
+            if row[a] > max:
+                max = row[a]
+        return max
+
+    def matplotlib_draw_hist(self, d):
+        plt.hist(d, bins=1000, normed=0, facecolor="blue",
                  edgecolor="black", alpha=0.7)
         plt.show()
 
-    def paint_colC_when_colA_is_B_hist(self, a, b, c):
-        col = self.get_frequency_of_colC_where_colA_is_B(a, b, c)
-        plt.hist(col, bins=25, normed=0, facecolor="blue",
-                 edgecolor="black", alpha=0.7)
+    def seaborn_draw_kde(self, d):
+        sb.distplot(d, kde_kws={"label": "KDE"}, color="y")
         plt.show()
 
-    def print_colA_Quantile(self, a):
-        col = self.get_frequency_of_A(a)
-        c = pd.DataFrame(col).describe()
-        print(c)
+    def print_quantile(self, d):
+        print("分位数信息:\n", d.describe())
 
-    def print_colC_when_colA_is_B_Quantile(self, a, b, c):
-        col = self.get_frequency_of_colC_where_colA_is_B(a, b, c)
-        c = pd.DataFrame(col).describe()
-        print(c)
 
-    def sbpaint_colC_when_colA_is_B_kde(self, a, b, c):
-        col = self.get_frequency_of_colC_where_colA_is_B(a, b, c)
-        sb.distplot(col, kde_kws={"label": "KDE"}, color="y")
-        plt.show()
+"""
+剩余需求：
 
-    def sbpaint_frequency_of_A_kde(self, a):
-        col = self.get_frequency_of_A(a)
-        sb.distplot(col, kde_kws={"label": "KDE"}, color="y")
-        plt.show()
+3.用第二列数据 对30个电影画时间序列图 曲线图 就电影一那种 找到三个最像的就行
+4.对30个电影进行两两的相关系数分析 就是按照他的时间序列 000100200003这种的
+对上面三个最像的图像求相关有个举例
+比如corr（电影1，电影2）
+corr（电影1，电影3）这种
+然后这30个电影 想要一个30x30的矩阵
+"""
 
 
 if __name__ == "__main__":
     als = Analysis('newratinglist20.mat')
-    als.sbpaint_frequency_of_A_kde(1)
+
+    known_film = {}  # known_film = {电影：评价数}
+
+    for row in als.mat:
+        if row[1] not in known_film:
+            known_film[row[1]] = 1
+        else:
+            known_film[row[1]] += 1
+
+    # 需求 评价低于20的数据行全扔掉
+    del_keys = []
+    for i in known_film:
+        if known_film[i] < 20:
+            del_keys.append(i)
+    for d in del_keys:
+        known_film.pop(d)
+
+    # 需求 对3000个电影的评价数的画分布图  （每个电影的评价数先加和）横轴是评价数  纵轴是频率
+    commentNums = pd.Series(list(known_film.values()))
+    sb.distplot(commentNums, kde_kws={"label": "KDE"}, color="y")
+    plt.show()
+
+    # 需求 取四分位数 就是那些评价多的
+    als.print_quantile(commentNums)
+
+    # 需求 对电影取出来的电影 随机抽取30个
