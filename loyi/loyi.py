@@ -55,6 +55,13 @@ class Analysis:
     def print_quantile(self, d):
         print("分位数信息:\n", d.describe())
 
+    def collect_colA_where_colB_eq_C(self, a, b, c):
+        l = []
+        for row in self.mat:
+            if row[b] == c:
+                l.append(row[a])
+        return l
+
 
 """
 剩余需求：
@@ -79,20 +86,31 @@ if __name__ == "__main__":
         else:
             known_film[row[1]] += 1
 
-    # 需求 评价低于20的数据行全扔掉
+    # 需求 求出评价数2000以上的电影有多少吗
+    # morethan2000 = 0
+    # for i in known_film:
+    #     if known_film[i] > 2000:
+    #         morethan2000 += 1
+    # print("评价数多于2000的电影有：", morethan2000)
+
+    # 需求 评价低于2000的数据行全扔掉
     del_keys = []
     for i in known_film:
-        if known_film[i] < 20:
+        if known_film[i] < 2000:
             del_keys.append(i)
     for d in del_keys:
         known_film.pop(d)
 
     # 需求 对3000个电影的评价数的画分布图  （每个电影的评价数先加和）横轴是评价数  纵轴是频率
-    commentNums = pd.Series(list(known_film.values()))
-    sb.distplot(commentNums, kde_kws={"label": "KDE"}, color="y")
-    plt.show()
+    # commentNums = pd.Series(list(known_film.values()))
+    # sb.distplot(commentNums, kde_kws={"label": "KDE"}, color="y")
+    # plt.show()
 
     # 需求 取四分位数 就是那些评价多的
-    als.print_quantile(commentNums)
-
-    # 需求 对电影取出来的电影 随机抽取30个
+    # als.print_quantile(commentNums)
+    for n in known_film:
+        l = pd.Series(als.collect_colA_where_colB_eq_C(2, 1, n))
+        sb.distplot(l, kde_kws={"label": "KDE"}, color="y")
+        arg_name = str(n)
+        plt.savefig(arg_name+".png")
+        plt.clf()

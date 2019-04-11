@@ -1,3 +1,6 @@
 */.vscode/
 *.mat
 */venv
+
+.DS_Store
+*/greaterThan2000
