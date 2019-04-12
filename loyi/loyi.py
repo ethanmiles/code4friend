@@ -24,7 +24,7 @@ class Analysis:
         mat_t = f[name]
         mat = np.transpose(mat_t)
         mat = mat.astype(np.int32)  # float2int
-        mat[:, 2] = mat[:, 2] / (24*30)   # hours2month
+        mat[:, 2] = mat[:, 2] / (24*30)   # hours2year
         self.mat = mat
 
     # self.mat
@@ -108,9 +108,27 @@ if __name__ == "__main__":
 
     # 需求 取四分位数 就是那些评价多的
     # als.print_quantile(commentNums)
-    for n in known_film:
-        l = pd.Series(als.collect_colA_where_colB_eq_C(2, 1, n))
-        sb.distplot(l, kde_kws={"label": "KDE"}, color="y")
-        arg_name = str(n)
-        plt.savefig(arg_name+".png")
-        plt.clf()
+
+    # 对每个电影的评价时间作kde图
+    # for n in known_film:
+    #     l = pd.Series(als.collect_colA_where_colB_eq_C(2, 1, n))
+    #     sb.distplot(l, kde_kws={"label": "KDE"}, color="y")
+    #     arg_name = str(n)
+    #     plt.savefig(arg_name+".png")
+    #     plt.clf()
+
+    max_time = als.get_max_of_colA(2)
+    print("the maximum year is : ", max_time)
+    max_film = als.get_max_of_colA(1)
+    print("the maximum film number is : ", max_film)
+
+    # t = [0 for t in range(0, max_time)]
+    # out = []
+    # for row in range(0, max_film):
+    #     out.append(t.copy())
+
+    # for n in known_film:
+    #     for i in als.collect_colA_where_colB_eq_C(2, 1, n):
+    #         out[n-1][i-1] += 1
+
+    # print(out)
