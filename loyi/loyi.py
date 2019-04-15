@@ -53,7 +53,7 @@ class Analysis:
         plt.show()
 
     def print_quantile(self, d):
-        print("分位数信息:\n", d.describe())
+        print("quantile :\n", d.describe())
 
     def collect_colA_where_colB_eq_C(self, a, b, c):
         l = []
@@ -118,17 +118,21 @@ if __name__ == "__main__":
     #     plt.clf()
 
     max_time = als.get_max_of_colA(2)
-    print("the maximum year is : ", max_time)
+    size_time = max_time + 1  # 0 1 2 3 4 5 ... n  一共n+1个
+    print("the maximum month is : ", max_time)
     max_film = als.get_max_of_colA(1)
     print("the maximum film number is : ", max_film)
 
-    # t = [0 for t in range(0, max_time)]
-    # out = []
-    # for row in range(0, max_film):
-    #     out.append(t.copy())
+    t = [0 for t in range(0, size_time)]
+    out = []
+    for n in known_film:
+        film = t.copy()
+        for i in als.collect_colA_where_colB_eq_C(2, 1, n):
+            film[i] += 1
+        film.insert(0, n)
+        out.append(film)
 
-    # for n in known_film:
-    #     for i in als.collect_colA_where_colB_eq_C(2, 1, n):
-    #         out[n-1][i-1] += 1
-
-    # print(out)
+    for l in out:
+        for i in l:
+            print(str(i)+",", end="")
+        print('\n')
