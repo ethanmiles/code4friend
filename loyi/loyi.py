@@ -60,6 +60,7 @@ class Analysis:
         for row in self.mat:
             if row[b] == c:
                 l.append(row[a])
+        #l.sort()
         return l
 
 
@@ -116,6 +117,18 @@ if __name__ == "__main__":
     #     arg_name = str(n)
     #     plt.savefig(arg_name+".png")
     #     plt.clf()
+
+    # TODO: corr
+    # l = []
+    # for n in known_film:
+    #     l.append(pd.Series(als.collect_colA_where_colB_eq_C(2, 1, n)))
+    
+    # for i in l:
+    #     for j in l:
+    #         if i==j:
+    #             continue
+    #         else:
+    #             print(i.corrwith(j))
 
     max_time = als.get_max_of_colA(2)
     size_time = max_time + 1  # 0 1 2 3 4 5 ... n  一共n+1个
