@@ -88,7 +88,7 @@ if __name__ == "__main__":
             known_film[row[1]] += 1
 
     # 需求 求出评价数2000以上的电影有多少吗
-    # morethan2000 = 0
+    # morethan2000       = 0
     # for i in known_film:
     #     if known_film[i] > 2000:
     #         morethan2000 += 1
@@ -97,7 +97,7 @@ if __name__ == "__main__":
     # 需求 评价低于2000的数据行全扔掉
     del_keys = []
     for i in known_film:
-        if known_film[i] < 2000:
+        if known_film[i] < 1000:
             del_keys.append(i)
     for d in del_keys:
         known_film.pop(d)
